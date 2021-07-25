@@ -74,7 +74,7 @@ function onGlobalClick(e: MouseEvent) {
   const a = e.composedPath().find((el) => el instanceof HTMLAnchorElement && el.href) as HTMLAnchorElement | null
   const anyKey = e.altKey || e.ctrlKey || e.shiftKey
 
-  if (a && !a.target && !anyKey && isMatchUrl(basePath, a.href)) {
+  if (a && !a.target && !anyKey && isMatchUrl('/', a.href)) {
     e.preventDefault()
     pushUrl(a.href)
   }
