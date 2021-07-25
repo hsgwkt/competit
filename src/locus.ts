@@ -51,7 +51,7 @@ function replaceUrl(value: URLValue) {
 }
 
 function updateStore() {
-  store.path = location.pathname
+  store.path = location.pathname.replace(basePath, '/')
   store.query = Object.fromEntries(new URLSearchParams(location.search))
 }
 
