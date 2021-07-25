@@ -1,7 +1,12 @@
 <header>
-  <a href="/" :class="{ active: locus.isMatch('/', true) }">Top</a>
-  <a href="/todo" :class="{ active: locus.isMatch('/todo') }">Todo</a>
-  <a href="/about" :class="{ active: locus.isMatch('/about') }">About</a>
+  <a
+    v-for="link in links"
+    class="link"
+    :class="{ active: locus.isMatch(link.url, link.exact) }"
+    :href="locus.resolve(link.url)"
+  >
+    {{ link.text }}
+  </a>
 </header>
 
 <main>
@@ -17,6 +22,11 @@
 
   export default defineComponent(import.meta, class {
     locus = locus
+    links = [
+      { url: '/', text: 'Top', exact: true },
+      { url: '/todo', text: 'Todo', exact: false },
+      { url: '/about', text: 'About', exact: false },
+    ]
   })
 </script>
 
@@ -38,11 +48,13 @@
   header {
     margin: 0 calc(50% - 50vw);
     padding: 0 calc(50vw - 50%);
+    display: flex;
+    gap: 0 8px;
     background-color: #ddd;
   }
 
-  header a {
-    display: inline-flex;
+  .link {
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 50px;
@@ -51,8 +63,8 @@
     text-decoration: inherit;
   }
 
-  header a.active,
-  header a:hover {
+  .link.active,
+  .link:hover {
     background-color: #eee;
   }
 
