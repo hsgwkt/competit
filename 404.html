@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<script>
+  const basePath = location.hostname === 'hsgwkt.github.io' ? '/competit/demo/' : '/'
+  if (location.pathname.startsWith(basePath)) {
+    const params = new URLSearchParams({
+      _redirect: location.pathname.replace(basePath, '/')
+    })
+    location.assign(`${basePath}?${params}`)
+  } else {
+    location.assign(basePath)
+  }
+</script>

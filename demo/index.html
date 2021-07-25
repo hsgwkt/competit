@@ -3,7 +3,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>
-  document.write(`<base href="${location.hostname === 'hsgwkt.github.io' ? '/competit/' : '/'}">`)
+  document.write(`<base href="${location.hostname === 'hsgwkt.github.io' ? '/competit/demo/' : '/'}">`)
 </script>
 <style>
   body {
@@ -17,6 +17,8 @@
 
 <script type="module">
     (async () => {
+      const redirectUrl = new URLSearchParams(location.search).get('_redirect')
+      if (redirectUrl) history.replaceState(history.state, '', `.${redirectUrl}`)
       await navigator.serviceWorker.register('./sw.js')
       if (!navigator.serviceWorker.controller) {
         await new Promise((resolve) => {
