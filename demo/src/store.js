@@ -1,4 +1,4 @@
-import { reactive } from './competit.js'
+import { reactive } from '../../competit.js'
 
 function loadStore() {
   try {
