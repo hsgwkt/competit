@@ -14,7 +14,7 @@ const store = reactive({
   query: {} as Record<string, string>,
 })
 
-function isObject(value: URLValue): value is object {
+function isObject(value: unknown): value is object {
   return typeof value === 'object' && value !== null
 }
 
