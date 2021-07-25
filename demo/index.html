@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  document.write(`<base href="${location.hostname === 'hsgwkt.github.io' ? '/competit' : '/'}">`)
+</script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<title>Demo</title>
+
+<app-root></app-root>
+
+<script type="module">
+    (async () => {
+      await navigator.serviceWorker.register('./sw.js')
+      if (!navigator.serviceWorker.controller) {
+        await new Promise((resolve) => {
+          navigator.serviceWorker.addEventListener('controllerchange', resolve)
+        })
+      }
+      await import('./src/app-root.html?module')
+    })()
+</script>

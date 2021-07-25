@@ -1,0 +1,21 @@
+<app-layout v-effect="routing($el)"></app-layout>
+<template v-effect="saveStore()"></template>
+
+<script type="module">
+  import { defineComponent, locus } from './competit.js'
+  import store, { saveStore } from './store.js'
+  import './components/app-layout.html?module'
+
+  const docTitle = document.title
+
+  export default defineComponent(import.meta, class {
+    async routing(el) {
+      const name = locus.path.substr(1).replace(/[/_]/g, '-') || 'index'
+      const mod = await import(`./pages/${name}.html?module`).catch(() => import(`./pages/404.html?module`))
+      document.title = mod.title ? `${mod.title} - ${docTitle}` : docTitle
+      el.replaceChildren(new mod.default())
+    }
+
+    saveStore = saveStore
+  })
+</script>

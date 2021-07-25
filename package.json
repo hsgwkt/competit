@@ -1,0 +1,21 @@
+{
+  "name": "competit",
+  "version": "0.1.0",
+  "license": "MIT",
+  "module": "dist/competit.js",
+  "scripts": {
+    "dev": "NODE_ENV=development node build.js",
+    "build": "NODE_ENV=production node build.js",
+    "demo": "servor demo"
+  },
+  "dependencies": {
+    "@types/stylis": "^4.0.1",
+    "petite-vue": "^0.2.3",
+    "stylis": "^4.0.10"
+  },
+  "devDependencies": {
+    "esbuild": "^0.12.15",
+    "servor": "^4.0.2",
+    "tslib": "^2.3.0"
+  }
+}

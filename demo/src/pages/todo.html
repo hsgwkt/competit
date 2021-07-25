@@ -1,0 +1,70 @@
+<h1>Todo</h1>
+
+<button class="add" @click="locus.push('/todo/add')">Add</button>
+
+<div class="todo-list">
+  <label v-for="todo in store.todos" class="todo">
+    <input type="checkbox" v-model="todo.done">
+    <div class="name">{{ todo.name }}</div>
+    <button class="edit" @click="editTodo(todo)">Edit</button>
+    <button class="delete" @click="deleteTodo(todo)">Delete</button>
+  </label>
+</div>
+
+<script type="module">
+  import { defineComponent, locus } from '../competit.js'
+  import store from '../store.js'
+
+  export const title = 'Todo'
+
+  export default defineComponent(import.meta, class {
+    locus = locus
+    store = store
+
+    editTodo(todo) {
+      locus.push({
+        path: '/todo/edit',
+        query: { id: todo.id }
+      })
+    }
+
+    deleteTodo(todo) {
+      store.todos = store.todos.filter((t) => t !== todo)
+    }
+  })
+</script>
+
+<style>
+  :host {
+    display: block;
+  }
+
+  .add {
+    padding: 8px 16px;
+  }
+
+  .todo-list {
+    margin-top: 20px;
+  }
+
+  .todo {
+    display: flex;
+    align-items: center;
+    gap: 0 10px;
+    padding: 10px 20px;
+    border-bottom: #ccc 1px solid;
+  }
+
+  .todo:hover {
+    background-color: #f8f8f8;
+  }
+
+  .todo :checked + .name {
+    text-decoration: line-through;
+    color: #666;
+  }
+
+  .edit {
+    margin-left: auto;
+  }
+</style>

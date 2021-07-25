@@ -1,0 +1,27 @@
+<h1>Edit Todo</h1>
+
+<todo-form :todo="todo" @save="onSave" @cancel="locus.back()"></todo-form>
+
+<script type="module">
+  import { defineComponent, locus } from '../competit.js'
+  import store from '../store.js'
+  import '../components/todo-form.html?module'
+
+  export const title = 'Edit Todo'
+
+  export default defineComponent(import.meta, class {
+    locus = locus
+    todo = { ...store.todos.find((t) => t.id === locus.query.id) }
+
+    onSave() {
+      store.todos = store.todos.map((t) => t.id === this.todo.id ? this.todo : t)
+      locus.push('/todo')
+    }
+  })
+</script>
+
+<style>
+  :host {
+    display: block;
+  }
+</style>

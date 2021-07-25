@@ -1,0 +1,36 @@
+<form @submit.prevent="$emit('save')">
+  <input required v-model="todo.name">
+  <button type="button" @click="$emit('cancel')">Cancel</button>
+  <button>Save</button>
+</form>
+
+<script type="module">
+  import { defineComponent } from '../competit.js'
+
+  export default defineComponent(import.meta, class {
+    $props = ['todo']
+    todo = {}
+  })
+</script>
+
+<style>
+  :host {
+    display: block;
+  }
+
+  input {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+
+  button {
+    padding: 8px 16px;
+  }
+
+  button + button {
+    margin-left: 8px;
+  }
+</style>

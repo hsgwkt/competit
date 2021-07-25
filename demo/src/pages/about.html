@@ -1,0 +1,17 @@
+<h1>HTML Modules + Web Components Demo</h1>
+<a href="https://github.com/hsgwkt/competit" target="_blank">github</a>
+
+<script type="module">
+  import { defineComponent } from '../competit.js'
+
+  export const title = 'About'
+
+  export default defineComponent(import.meta, class {
+  })
+</script>
+
+<style>
+  :host {
+    display: block;
+  }
+</style>
