@@ -27,7 +27,8 @@ async function fetchModuleHtml(req) {
 }
 
 self.addEventListener('fetch', (e) => {
-  if (e.request.url.endsWith('.html?module')) {
+  const url = new URL(e.request.url)
+  if (url.pathname.endsWith('.html') && url.searchParams.has('module')) {
     e.respondWith(fetchModuleHtml(e.request))
   }
 })
