@@ -6,7 +6,7 @@ HTML Modules が動くなら、ブラウザ上でそのまま動きます。
 
 テンプレートエンジンについては [petite-vue](https://github.com/vuejs/petite-vue) を参照。
 
-[demo](https://hsgwkt.github.io/competit/demo/)
+[demo](https://hsgwkt.github.io/competit/)
 
 x-example.html
 
