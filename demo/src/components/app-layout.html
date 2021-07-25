@@ -1,12 +1,14 @@
 <header>
-  <a
-    v-for="link in links"
-    class="link"
-    :class="{ active: locus.isMatch(link.url, link.exact) }"
-    :href="locus.resolve(link.url)"
-  >
-    {{ link.text }}
-  </a>
+  <div class="link-list">
+    <a
+      v-for="link in links"
+      class="link"
+      :class="{ active: locus.isMatch(link.url, link.exact) }"
+      :href="locus.resolve(link.url)"
+    >
+      {{ link.text }}
+    </a>
+  </div>
 </header>
 
 <main>
@@ -32,12 +34,9 @@
 
 <style>
   :host {
-    margin: 0 auto;
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
-    width: 800px;
-    max-width: calc(100% - 32px);
     color: #222;
     font-family: "Helvetica Neue", "Helvetica", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Arial", "Yu Gothic", "Meiryo", sans-serif;
     font-size: 14px;
@@ -46,11 +45,17 @@
   }
 
   header {
-    margin: 0 calc(50% - 50vw);
-    padding: 0 calc(50vw - 50%);
+    background-color: #ddd;
+    min-width: 0;
+    overflow: auto;
+  }
+
+  .link-list {
+    margin: 0 auto;
+    width: 800px;
+    max-width: calc(100% - 32px);
     display: flex;
     gap: 0 8px;
-    background-color: #ddd;
   }
 
   .link {
@@ -68,12 +73,18 @@
     background-color: #eee;
   }
 
+  main {
+    min-width: 0;
+  }
+
   ::slotted(*) {
-    margin: 20px 0;
+    margin: 20px auto;
+    display: block;
+    width: 800px;
+    max-width: calc(100% - 32px);
   }
 
   footer {
-    margin: 0 calc(50% - 50vw);
     display: flex;
     align-items: center;
     justify-content: center;
