@@ -21,7 +21,7 @@ function resolveUrl(value: URLValue) {
 
   let path = conf.path || store.path
   const query = conf.query || {}
-  const params = conf.params ? conf.params.slice() : []
+  const params = (conf.params || store.params).slice()
 
   path = path.replace(/[^/]+/g, (key) => {
     const param = key.startsWith('_') && params.pop()
