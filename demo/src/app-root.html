@@ -10,7 +10,7 @@
 
   export default defineComponent(import.meta, class {
     async routing(el) {
-      const name = locus.path.substr(1).replace(/[/_]/g, '-') || 'index'
+      const name = locus.path.replace(/\/_[^/]+/g, '/x').replace(/[/_]/g, '-').substr(1) || 'index'
       const mod = await import(`./pages/${name}.html?module`).catch(() => import(`./pages/404.html?module`))
       document.title = mod.title ? `${mod.title} - ${docTitle}` : docTitle
       el.replaceChildren(new mod.default())

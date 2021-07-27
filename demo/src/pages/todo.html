@@ -22,10 +22,7 @@
     store = store
 
     editTodo(todo) {
-      locus.push({
-        path: '/todo/edit',
-        query: { id: todo.id }
-      })
+      locus.push(`/todo/_${todo.id}`)
     }
 
     deleteTodo(todo) {

@@ -1,32 +1,42 @@
 import { reactive } from 'petite-vue'
 
-export interface URLObject {
+export interface URLConfig {
   path?: string
   query?: Record<string, string>
+  params?: string[]
 }
 
-export type URLValue = string | URLObject
+export type URLValue = string | URLConfig
 
 const basePath = new URL(document.baseURI).pathname
 
 const store = reactive({
   path: '',
   query: {} as Record<string, string>,
+  params: [] as string[],
 })
 
-function isObject(value: unknown): value is object {
-  return typeof value === 'object' && value !== null
-}
-
 function resolveUrl(value: URLValue) {
-  let path = (isObject(value) ? value.path : value) || '.'
-  const query = (isObject(value) ? value.query : null) || {}
+  const conf = typeof value === 'string' ? { path: value } : value
+
+  let path = conf.path || store.path
+  const query = conf.query || {}
+  const params = conf.params ? conf.params.slice() : []
+
+  path = path.replace(/[^/]+/g, (key) => {
+    const param = key.startsWith('_') && params.pop()
+    return param ? `_${param}` : key
+  })
 
   if (path.startsWith('/')) {
     path = basePath.replace(/\/$/, '') + path
   }
 
   const url = new URL(path, location.href)
+  url.pathname = url.pathname.replace(/[^/]+/g, (s) => {
+    const p = s.startsWith('_') && params.pop()
+    return p ? `_${p}` : s
+  })
 
   for (const [key, value] of Object.entries(query)) {
     url.searchParams.set(key, value)
@@ -53,6 +63,7 @@ function replaceUrl(value: URLValue) {
 function updateStore() {
   store.path = location.pathname.replace(basePath, '/')
   store.query = Object.fromEntries(new URLSearchParams(location.search))
+  store.params = store.path.split('/').filter((k) => k.startsWith('_')).map((k) => k.substr(1))
 }
 
 function toEndpoint(url: string) {
@@ -90,6 +101,9 @@ export default {
   },
   get query() {
     return store.query
+  },
+  get params() {
+    return store.params
   },
   push: pushUrl,
   replace: replaceUrl,

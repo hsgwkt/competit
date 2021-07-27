@@ -11,7 +11,7 @@
 
   export default defineComponent(import.meta, class {
     locus = locus
-    todo = { ...store.todos.find((t) => t.id === locus.query.id) }
+    todo = { ...store.todos.find((t) => t.id === locus.params[0]) }
 
     onSave() {
       store.todos = store.todos.map((t) => t.id === this.todo.id ? this.todo : t)
