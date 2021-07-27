@@ -22,14 +22,14 @@
 <script type="module">
   import { defineComponent, locus } from '../../competit.js'
 
-  export default defineComponent(import.meta, class {
-    locus = locus
-    links = [
+  export default defineComponent(import.meta, () => ({
+    locus,
+    links: [
       { url: '/', text: 'Top', exact: true },
       { url: '/todo', text: 'Todo', exact: false },
       { url: '/about', text: 'About', exact: false },
-    ]
-  })
+    ],
+  }))
 </script>
 
 <style>

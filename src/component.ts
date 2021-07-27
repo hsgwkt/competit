@@ -1,7 +1,7 @@
 import { createApp, reactive } from 'petite-vue'
 import { compile, serialize, stringify } from 'stylis'
 import { defineElementProperty } from './property'
-import { getOrPut, newInstance, InstanceCtor, emit } from './util'
+import { getOrPut, emit } from './util'
 
 const docCache = new WeakMap<Document, DocumentFragment>()
 
@@ -34,7 +34,9 @@ interface ComponentApi {
   $emit: () => void
 }
 
-export function defineComponent<D extends ComponentConfig>(meta: ImportMeta, ctor: InstanceCtor<HTMLElement, D & ThisType<ComponentApi>>) {
+export type ComponentConstructor = (el: HTMLElement) => ComponentConfig & ThisType<ComponentApi>
+
+export function defineComponent(meta: ImportMeta, ctor: ComponentConstructor) {
   const fileName = new URL(meta.url).pathname.replace(/^.*\/|\..*$/g, '')
   const tagName = fileName.includes('-') ? fileName : `x-${fileName}`
   const className = tagName.replace(/(^|\-)([a-z])/g, (_, __, c) => c.toUpperCase())
@@ -44,7 +46,7 @@ export function defineComponent<D extends ComponentConfig>(meta: ImportMeta, cto
       constructor() {
         super()
 
-        const data = reactive(newInstance(ctor, this))
+        const data = reactive(ctor(this))
         Reflect.set(data, '$emit', emit.bind(null, this))
 
         for (const prop of (data.$props || [])) {

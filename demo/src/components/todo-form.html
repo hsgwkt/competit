@@ -7,10 +7,10 @@
 <script type="module">
   import { defineComponent } from '../../competit.js'
 
-  export default defineComponent(import.meta, class {
-    $props = ['todo']
-    todo = {}
-  })
+  export default defineComponent(import.meta, () => ({
+    $props: ['todo'],
+    todo: {},
+  }))
 </script>
 
 <style>

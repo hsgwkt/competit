@@ -9,16 +9,16 @@
 
   export const title = 'Add Todo'
 
-  export default defineComponent(import.meta, class {
-    locus = locus
-    todo = { done: false, id: '', name: '' }
+  export default defineComponent(import.meta, () => ({
+    locus,
+    todo: { done: false, id: '', name: '' },
 
     onSave() {
       this.todo.id = Math.random().toString(32).substring(2)
       store.todos = store.todos.concat(this.todo)
       locus.push('/todo')
-    }
-  })
+    },
+  }))
 </script>
 
 <style></style>

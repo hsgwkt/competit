@@ -17,18 +17,18 @@
 
   export const title = 'Todo'
 
-  export default defineComponent(import.meta, class {
-    locus = locus
-    store = store
+  export default defineComponent(import.meta, () => ({
+    locus,
+    store,
 
     editTodo(todo) {
       locus.push(`/todo/_${todo.id}`)
-    }
+    },
 
     deleteTodo(todo) {
       store.todos = store.todos.filter((t) => t !== todo)
-    }
-  })
+    },
+  }))
 </script>
 
 <style>

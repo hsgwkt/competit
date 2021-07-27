@@ -9,15 +9,15 @@
 
   export const title = 'Edit Todo'
 
-  export default defineComponent(import.meta, class {
-    locus = locus
-    todo = { ...store.todos.find((t) => t.id === locus.params[0]) }
+  export default defineComponent(import.meta, () => ({
+    locus,
+    todo: { ...store.todos.find((t) => t.id === locus.params[0]) },
 
     onSave() {
       store.todos = store.todos.map((t) => t.id === this.todo.id ? this.todo : t)
       locus.push('/todo')
-    }
-  })
+    },
+  }))
 </script>
 
 <style></style>
