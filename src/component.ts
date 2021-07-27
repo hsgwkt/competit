@@ -34,9 +34,9 @@ interface ComponentApi {
   $emit: () => void
 }
 
-export type ComponentConstructor = (el: HTMLElement) => ComponentConfig & ThisType<ComponentApi>
+export type ComponentConstructor = (el: HTMLElement) => void | (ComponentConfig & ThisType<ComponentApi>)
 
-export function defineComponent(meta: ImportMeta, ctor: ComponentConstructor) {
+export function defineComponent(meta: ImportMeta, ctor?: ComponentConstructor) {
   const fileName = new URL(meta.url).pathname.replace(/^.*\/|\..*$/g, '')
   const tagName = fileName.includes('-') ? fileName : `x-${fileName}`
   const className = tagName.replace(/(^|\-)([a-z])/g, (_, __, c) => c.toUpperCase())
@@ -46,7 +46,7 @@ export function defineComponent(meta: ImportMeta, ctor: ComponentConstructor) {
       constructor() {
         super()
 
-        const data = reactive(ctor(this))
+        const data = reactive(ctor?.(this) || {})
         Reflect.set(data, '$emit', emit.bind(null, this))
 
         for (const prop of (data.$props || [])) {
