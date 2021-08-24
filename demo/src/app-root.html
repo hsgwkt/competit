@@ -8,12 +8,20 @@
 
   const docTitle = document.title
 
+  async function importPage(name) {
+    const mod = await import(`./pages/${name}.html?module`)
+    if (!customElements.get('pages-' + name)) {
+      customElements.define('pages-' + name, mod.default)
+    }
+    return mod
+  }
+
   export default defineComponent(import.meta, () => ({
     saveStore,
 
     async routing(el) {
       const name = locus.path.replace(/\/_[^/]+/g, '/x').replace(/[/_]/g, '-').substr(1) || 'index'
-      const mod = await import(`./pages/${name}.html?module`).catch(() => import(`./pages/404.html?module`))
+      const mod = await importPage(name).catch(() => importPage('404'))
       document.title = mod.title ? `${mod.title} - ${docTitle}` : docTitle
       el.replaceChildren(new mod.default())
     },

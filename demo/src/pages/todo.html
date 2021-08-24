@@ -12,12 +12,12 @@
 </div>
 
 <script type="module">
-  import { defineComponent, locus } from '../../competit.js'
+  import { createComponent, locus } from '../../competit.js'
   import store from '../store.js'
 
   export const title = 'Todo'
 
-  export default defineComponent(import.meta, () => ({
+  export default createComponent(import.meta, () => ({
     locus,
     store,
 

@@ -3,13 +3,13 @@
 <todo-form :todo="todo" @save="onSave" @cancel="locus.back()"></todo-form>
 
 <script type="module">
-  import { defineComponent, locus } from '../../competit.js'
+  import { createComponent, locus } from '../../competit.js'
   import store from '../store.js'
   import '../components/todo-form.html?module'
 
   export const title = 'Edit Todo'
 
-  export default defineComponent(import.meta, () => ({
+  export default createComponent(import.meta, () => ({
     locus,
     todo: { ...store.todos.find((t) => t.id === locus.params[0]) },
 

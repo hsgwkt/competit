@@ -5,10 +5,14 @@ import { getOrPut, emit } from './util'
 
 const docCache = new WeakMap<Document, DocumentFragment>()
 
-function cloneDocContent(doc: Document) {
-  const docFragment = getOrPut(docCache, doc, () => {
+function cloneContent(el: Document | HTMLElement) {
+  const docFragment = getOrPut(docCache, el, () => {
     const temp = document.createElement('template')
-    temp.innerHTML = doc.head.innerHTML + doc.body.innerHTML
+    temp.innerHTML = el instanceof Document
+      ? el.head.innerHTML + el.body.innerHTML
+      : el instanceof HTMLTemplateElement
+      ? el.innerHTML
+      : el.outerHTML
     for (const node of temp.content.querySelectorAll('script')) {
       node.remove()
     }
@@ -26,40 +30,41 @@ declare global {
   }
 }
 
-interface ComponentConfig {
+export interface ComponentConfig {
+  $el?: Document | HTMLElement
   $props?: string[]
 }
 
-interface ComponentApi {
+export interface ComponentApi {
   $emit: () => void
 }
 
-export type ComponentConstructor = (el: HTMLElement) => void | (ComponentConfig & ThisType<ComponentApi>)
+export type ComponentData = ComponentConfig & ThisType<ComponentApi>
 
-export function defineComponent(meta: ImportMeta, ctor?: ComponentConstructor) {
-  const fileName = new URL(meta.url).pathname.replace(/^.*\/|\..*$/g, '')
-  const tagName = fileName.includes('-') ? fileName : `x-${fileName}`
-  const className = tagName.replace(/(^|\-)([a-z])/g, (_, __, c) => c.toUpperCase())
+export type ComponentConstructor = (el: HTMLElement) => void | ComponentData
 
-  const clazz = ({
-    [className]: class extends HTMLElement {
-      constructor() {
-        super()
+export function createComponent(meta: ImportMeta | null, ctor?: ComponentConstructor) {
+  return class Component extends HTMLElement {
+    constructor() {
+      super()
 
-        const data = reactive(ctor?.(this) || {})
-        Reflect.set(data, '$emit', emit.bind(null, this))
+      const data = reactive(ctor?.(this) || {})
+      Reflect.set(data, '$emit', emit.bind(null, this))
 
-        for (const prop of (data.$props || [])) {
-          defineElementProperty(this, prop, {
-            default: Reflect.get(data, prop),
-            get: () => Reflect.get(data, prop),
-            set: (value) => Reflect.set(data, prop, value),
-          })
-        }
+      for (const prop of (data.$props || [])) {
+        defineElementProperty(this, prop, {
+          default: Reflect.get(data, prop),
+          get: () => Reflect.get(data, prop),
+          set: (value) => Reflect.set(data, prop, value),
+        })
+      }
 
+      const $el = data.$el || meta?.document
+
+      if ($el) {
         const root = this.attachShadow({ mode: 'open' })
         const app = createApp(data)
-        root.append(...cloneDocContent(meta.document))
+        root.append(...cloneContent($el))
 
         for (const node of root.children) {
           if (!(node instanceof HTMLStyleElement)) {
@@ -68,8 +73,14 @@ export function defineComponent(meta: ImportMeta, ctor?: ComponentConstructor) {
         }
       }
     }
-  })[className] as new () => HTMLElement
+  } as new () => HTMLElement
+}
 
+export function defineComponent(meta: ImportMeta | string, ctor?: ComponentConstructor) {
+  const clazz = createComponent(typeof meta === 'string' ? null : meta, ctor)
+  const tagName = typeof meta === 'string'
+    ? meta
+    : new URL(meta.url).pathname.replace(/^.*\/|\..*$/g, '').replace(/^([^-]+)$/, 'x-$1')
   customElements.define(tagName, clazz)
   return clazz
 }
